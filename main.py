@@ -10,6 +10,7 @@ def process(request_process):
     code = 200
     message = 'success'
     url_request = "*"
+    response_data = None
 
     headers = {
         'Access-Control-Allow-Origin': url_request
@@ -17,9 +18,9 @@ def process(request_process):
 
     if request.method == 'OPTIONS':
         headers = {
-            'Access-Control-Allow-Origin': url_request,  # Allow your function to be called from any domain
-            'Access-Control-Allow-Methods': '*',  # Allow all HTTP methods
-            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': url_request,
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             'Access-Control-Max-Age': '1',
         }
         return '', 204, headers
@@ -70,22 +71,16 @@ def process(request_process):
     return jsonify(response), response['status']['code'], headers
 
 
-# Region Metodo para a Google Cloud Plataform
-def main(request_main):
+# ===== Entrypoint GCP (renomeado para não colidir) =====
+def gcp_entrypoint(request_main):
     return process(request_main)
 
 
-# End Region
-
-# Region Metodo para Testar Local via Postman/Rest Client
-# url:http://127.0.0.1:8090/main
-
-
+# ===== App Flask para execução via Gunicorn =====
 app = Flask(__name__)
 
-
 @app.route('/', methods=['POST'])
-def main():
+def root():
     return jsonify({"STATUS":"OK"})
 
 @app.route('/main', methods=['POST'])
@@ -93,8 +88,6 @@ def main_flask():
     return process(request)
 
 if __name__ == "__main__":
-    if platform in ["win32", "win64"]:
-        app.run(host='localhost', port=8090, debug=True)
-
-
-# End Region
+    # Observação: sys.platform em Windows é 'win32' mesmo em 64 bits.
+    port = int(os.getenv("PORT", "8090"))
+    app.run(host='0.0.0.0', port=port, debug=True)
