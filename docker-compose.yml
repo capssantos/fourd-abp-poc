@@ -1,0 +1,11 @@
+version: '3.8'  # Versão do Docker Compose
+
+services:  # Definição dos serviços
+  web:  # Nome do serviço
+    build: .  # Usar o Dockerfile no diretório atual para construir a imagem
+    volumes:
+      - .:/fourd-abc-poc  # Montar o diretório atual no contêiner
+    ports:
+      - "7423:7423"  # Mapear a porta 6000 do contêiner para a porta 6000 do host
+    environment:
+      FLASK_ENV: development  # Configuração do ambiente Flask
