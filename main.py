@@ -84,6 +84,10 @@ def main(request_main):
 app = Flask(__name__)
 
 
+@app.route('/', methods=['POST'])
+def main():
+    return jsonify({"STATUS":"OK"})
+
 @app.route('/main', methods=['POST'])
 def main_flask():
     return process(request)

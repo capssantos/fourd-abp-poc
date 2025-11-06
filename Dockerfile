@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 7423
 
 # Comando para rodar a aplicação com Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:7423", "run:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:7423", "main:app"]
